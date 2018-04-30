@@ -21,8 +21,8 @@
               <h1>Pomodoro Clock</h1>
               <header>
                   <div className="session">
-                    <Ctrl name="Break" />
-                    <Ctrl name="Session" />
+                    <Ctrl name="Break" num="5" />
+                    <Ctrl name="Session" num="25" />
                   </div>
               </header>
               <section>
@@ -34,13 +34,40 @@
       }
 
       class Ctrl extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {num: "0"};
+        }
+
+        componentDidMount() {
+          this.setState((prevState, props) => ({
+            num: (parseInt(prevState.num) + parseInt(props.num)).toString()
+          }));
+        }
+
+        increment() {
+          if (this.state.num < 30) {
+            this.setState((prevState, props) => ({
+            num: (parseInt(prevState.num) + 1).toString()
+          }));
+          }
+        }
+
+        decrement() {
+          if (this.state.num > 0) {
+            this.setState((prevState, props) => ({
+              num: (parseInt(prevState.num) - 1).toString()
+            }));
+          }    
+        }
+
         render() {
           return (
             <div className="ctrl">
               <p>{this.props.name} Length</p>
-              <button className="minus">-</button>
-              <span className="time">#</span>
-              <button className="plus">+</button>
+              <button className="minus" onClick={() => this.decrement()}>-</button>
+              <span className="time">{this.state.num}</span>
+              <button className="plus" onClick={() => this.increment()}>+</button>
             </div>
           );
         }
@@ -52,7 +79,7 @@
             <div className="timer">
               <p className="title">{this.props.name}</p>
               <p>0:00</p>
-              <span className="fill"></span>
+              <span className="fill" style={{height: '75%'}}></span>
             </div>
           );
         }
