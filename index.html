@@ -14,7 +14,51 @@
     <div id="app"></div>
 
     <script type="text/babel">
-      ReactDOM.render(<h1>Hello World</h1>, document.getElementById('app'));
+      class App extends React.Component {
+        render() {
+          return (
+            <div>
+              <h1>Pomodoro Clock</h1>
+              <header>
+                  <div className="session">
+                    <Ctrl name="Break" />
+                    <Ctrl name="Session" />
+                  </div>
+              </header>
+              <section>
+                <Timer name="Session" />
+              </section>
+            </div>
+          );
+        }
+      }
+
+      class Ctrl extends React.Component {
+        render() {
+          return (
+            <div className="ctrl">
+              <p>{this.props.name} Length</p>
+              <button className="minus">-</button>
+              <span className="time">#</span>
+              <button className="plus">+</button>
+            </div>
+          );
+        }
+      }
+
+      class Timer extends React.Component {
+        render() {
+          return (
+            <div className="timer">
+              <p className="title">{this.props.name}</p>
+              <p>0:00</p>
+              <span className="fill"></span>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(<App/>, document.getElementById('app'));
     </script>
   </body>
 </html> 
