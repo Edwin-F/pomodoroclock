@@ -15,18 +15,31 @@
 
     <script type="text/babel">
       class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.handleSessionChange = this.handleSessionChange.bind(this);
+          this.handleBreakChange = this.handleBreakChange.bind(this);
+          this.state = {session: "25", break: "5"};
+        }
+
+        handleSessionChange(num) {
+          this.setState({session: num})
+        }
+        handleBreakChange(num) {
+          this.setState({break: num})
+        }
         render() {
           return (
             <div>
               <h1>Pomodoro Clock</h1>
               <header>
                   <div className="session">
-                    <Ctrl name="Break" num="5" />
-                    <Ctrl name="Session" num="25" />
+                    <Ctrl name="Break" num={this.state.break} onNumChange={this.handleBreakChange}/>
+                    <Ctrl name="Session" num={this.state.session} onNumChange={this.handleSessionChange}/>
                   </div>
               </header>
               <section>
-                <Timer name="Session" />
+                <Timer name="Session" min={this.state.session} />
               </section>
             </div>
           );
@@ -36,38 +49,23 @@
       class Ctrl extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {num: "0"};
+          this.handleChange = this.handleChange.bind(this);
         }
 
-        componentDidMount() {
-          this.setState((prevState, props) => ({
-            num: (parseInt(prevState.num) + parseInt(props.num)).toString()
-          }));
-        }
-
-        increment() {
-          if (this.state.num < 30) {
-            this.setState((prevState, props) => ({
-            num: (parseInt(prevState.num) + 1).toString()
-          }));
-          }
-        }
-
-        decrement() {
-          if (this.state.num > 0) {
-            this.setState((prevState, props) => ({
-              num: (parseInt(prevState.num) - 1).toString()
-            }));
-          }    
+        handleChange(e) {
+          this.props.onNumChange(e.target.value);
+          console.log(e.target.value);
         }
 
         render() {
+          const decrement = this.props.num > 0 ? (parseInt(this.props.num) - 1).toString(): this.props.num;
+          const increment = this.props.num < 30 ? (parseInt(this.props.num) + 1).toString(): this.props.num;
           return (
             <div className="ctrl">
               <p>{this.props.name} Length</p>
-              <button className="minus" onClick={() => this.decrement()}>-</button>
-              <span className="time">{this.state.num}</span>
-              <button className="plus" onClick={() => this.increment()}>+</button>
+              <button className="minus" value={decrement} onClick={this.handleChange}>-</button>
+              <span className="time">{this.props.num}</span>
+              <button className="plus" value={increment} onClick={this.handleChange}>+</button>
             </div>
           );
         }
@@ -77,11 +75,20 @@
         render() {
           return (
             <div className="timer">
-              <p className="title">{this.props.name}</p>
-              <p>0:00</p>
+              <SessionTitle name={this.props.name} />
+              <p>{this.props.min}:00</p>
               <span className="fill" style={{height: '75%'}}></span>
             </div>
           );
+        }
+      }
+
+      function SessionTitle(props){
+        const title = props.name;
+        if (title === "Session") {
+          return <p className="title">Session</p>
+        } else {
+          return <p className="title">Break</p>
         }
       }
 
