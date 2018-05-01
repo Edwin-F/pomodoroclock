@@ -21,6 +21,7 @@
           this.handleBreakChange = this.handleBreakChange.bind(this);
           this.handleClick = this.handleClick.bind(this);
           this.handleTime = this.handleTime.bind(this);
+          this.handleClockEnd = this.handleClockEnd.bind(this);
           this.state = {session: "1", break: "5", isSessionOn: true, isTimerOn: false};
         }
 
@@ -30,6 +31,10 @@
 
         handleBreakChange(num) {
           this.setState({break: num})
+        }
+
+        handleClockEnd() {
+          this.handleClick();
         }
 
         handleClick() {
@@ -58,7 +63,7 @@
                   </div>
               </header>
               <section>
-                <Timer name={currentClockTitle} min={currentMinute} onClick={this.handleClick} />
+                <Timer name={currentClockTitle} min={currentMinute} onClick={this.handleClick} onClockEnd={this.handleClockEnd}/>
                 <h1>{this.state.isSessionOn ? 'ON': 'OFF'}</h1>
                  <button onClick={this.handleTime}>{this.state.isTimerOn ? 'Stop': 'Start'}</button>
               </section>
@@ -104,7 +109,7 @@
         }
 
         componentWillReceiveProps(nextProps){
-          if (this.props.min != nextProps.min) {
+          if (this.props.min != nextProps.min || this.props.name != nextProps.name) {
             this.setState({orig: nextProps.min, seconds: parseInt(nextProps.min) * 60});
             console.log('old: '+this.state.orig + ' new: '+ nextProps.min);
             this.stopTimer();
@@ -113,7 +118,7 @@
         }
 
         startTimer() {
-          this.timerID = setInterval(() => this.tick(), 1000);
+          this.timerID = setInterval(() => this.tick(), 100);
           console.log('this timer ID: ' + this.timerID);
         }
 
@@ -130,6 +135,7 @@
           if (this.state.seconds <= 0) {
             this.stopTimer();
             console.log('this state is: ' + this.state.seconds);
+            this.props.onClockEnd();
           }
         }
 
