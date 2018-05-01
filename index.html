@@ -21,7 +21,7 @@
           this.handleBreakChange = this.handleBreakChange.bind(this);
           this.handleClick = this.handleClick.bind(this);
           this.handleTime = this.handleTime.bind(this);
-          this.state = {session: "25", break: "5", isSessionOn: true, isTimerOn: false};
+          this.state = {session: "1", break: "5", isSessionOn: true, isTimerOn: false};
         }
 
         handleSessionChange(num) {
@@ -87,11 +87,55 @@
       }
 
       class Timer extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {original: 0, seconds: 30};
+        }
+
+        componentDidMount() {
+          const newSeconds = parseInt(this.props.min) * 60;
+          this.setState({original: this.props.min, seconds: newSeconds });
+          this.startTimer();
+        }
+
+        componentWillUnmount() {
+          clearInterval(this.timerID);
+        }
+
+        startTimer() {
+          this.timerID = setInterval(() => this.tick(), 1000);
+          console.log('this timer ID: ' + this.timerID);
+        }
+
+        stopTimer() {
+          clearInterval(this.timerID);
+          console.log('stop timer: '+this.timerID);
+        }
+
+        tick() {
+          const newSeconds = this.state.seconds - 1
+          this.setState({seconds: newSeconds});
+          if (this.state.seconds < 0) {
+            this.stopTimer();
+            console.log('this state is: ' + this.state.seconds);
+          }
+        }
+
+       componentWillReceiveProps(nextProps){
+          if (this.props.min != nextProps.min) {
+            this.setState({orignal: nextProps.min, seconds: parseInt(nextProps.min) * 60});
+            this.stopTimer();
+            this.startTimer();
+          }
+        }
+
+        
+
         render() {
           return (
             <div className="timer" onClick={this.props.onClick}>
               <p className="title">{this.props.name}</p>
-              <p>{this.props.min}:00</p>
+              <p>{this.props.min}:{this.state.seconds}</p>
               <span className="fill" style={{height: '75%'}}></span>
             </div>
           );
