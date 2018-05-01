@@ -19,16 +19,28 @@
           super(props);
           this.handleSessionChange = this.handleSessionChange.bind(this);
           this.handleBreakChange = this.handleBreakChange.bind(this);
-          this.state = {session: "25", break: "5"};
+          this.handleClick = this.handleClick.bind(this);
+          this.state = {session: "25", break: "5", isSessionOn: true};
         }
 
         handleSessionChange(num) {
           this.setState({session: num})
         }
+
         handleBreakChange(num) {
           this.setState({break: num})
         }
+
+        handleClick() {
+          this.setState(prevState => ({
+            isSessionOn: !prevState.isSessionOn
+          }));
+        }
+
         render() {
+          const currentSession = this.state.isSessionOn;
+          const currentClockTitle = currentSession ? "Session": "Break!";
+          const currentMinute = currentSession ? this.state.session: this.state.break;
           return (
             <div>
               <h1>Pomodoro Clock</h1>
@@ -39,7 +51,8 @@
                   </div>
               </header>
               <section>
-                <Timer name="Session" min={this.state.session} />
+                <Timer name={currentClockTitle} min={currentMinute} onClick={this.handleClick} />
+                <h1>{this.state.isSessionOn ? 'ON': 'OFF'}</h1>
               </section>
             </div>
           );
@@ -47,14 +60,8 @@
       }
 
       class Ctrl extends React.Component {
-        constructor(props) {
-          super(props);
-          this.handleChange = this.handleChange.bind(this);
-        }
-
-        handleChange(e) {
-          this.props.onNumChange(e.target.value);
-          console.log(e.target.value);
+        handleChange = (param) => (e) => {
+          this.props.onNumChange(param);
         }
 
         render() {
@@ -63,9 +70,9 @@
           return (
             <div className="ctrl">
               <p>{this.props.name} Length</p>
-              <button className="minus" value={decrement} onClick={this.handleChange}>-</button>
+              <button className="minus" onClick={this.handleChange(decrement)}>-</button>
               <span className="time">{this.props.num}</span>
-              <button className="plus" value={increment} onClick={this.handleChange}>+</button>
+              <button className="plus" onClick={this.handleChange(increment)}>+</button>
             </div>
           );
         }
@@ -74,21 +81,12 @@
       class Timer extends React.Component {
         render() {
           return (
-            <div className="timer">
-              <SessionTitle name={this.props.name} />
+            <div className="timer" onClick={this.props.onClick}>
+              <p className="title">{this.props.name}</p>
               <p>{this.props.min}:00</p>
               <span className="fill" style={{height: '75%'}}></span>
             </div>
           );
-        }
-      }
-
-      function SessionTitle(props){
-        const title = props.name;
-        if (title === "Session") {
-          return <p className="title">Session</p>
-        } else {
-          return <p className="title">Break</p>
         }
       }
 
