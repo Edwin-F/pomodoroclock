@@ -89,17 +89,27 @@
       class Timer extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {original: 0, seconds: 30};
+          this.state = {orig: 1, seconds: 30};
         }
 
         componentDidMount() {
           const newSeconds = parseInt(this.props.min) * 60;
-          this.setState({original: this.props.min, seconds: newSeconds });
+          const newMinutes = this.props.min;
+          this.setState({orig: newMinutes, seconds: newSeconds });
           this.startTimer();
         }
 
         componentWillUnmount() {
           clearInterval(this.timerID);
+        }
+
+        componentWillReceiveProps(nextProps){
+          if (this.props.min != nextProps.min) {
+            this.setState({orig: nextProps.min, seconds: parseInt(nextProps.min) * 60});
+            console.log('old: '+this.state.orig + ' new: '+ nextProps.min);
+            this.stopTimer();
+            this.startTimer();
+          }
         }
 
         startTimer() {
@@ -113,30 +123,28 @@
         }
 
         tick() {
-          const newSeconds = this.state.seconds - 1
-          this.setState({seconds: newSeconds});
-          if (this.state.seconds < 0) {
+          if (this.state.seconds > 0) {
+            const newSeconds = this.state.seconds - 1
+            this.setState({seconds: newSeconds});
+          }
+          if (this.state.seconds <= 0) {
             this.stopTimer();
             console.log('this state is: ' + this.state.seconds);
           }
         }
 
-       componentWillReceiveProps(nextProps){
-          if (this.props.min != nextProps.min) {
-            this.setState({orignal: nextProps.min, seconds: parseInt(nextProps.min) * 60});
-            this.stopTimer();
-            this.startTimer();
-          }
-        }
-
-        
-
         render() {
+          const piece = (parseInt(this.state.seconds));
+          const full = parseInt(this.state.orig) * 60;
+          const fillPercent = Math.floor((1-piece/full)*100);
+          const date = new Date(piece*1000);
+          const formatTime = date.toISOString().substr(14, 5);
+          //console.log('piece:'+piece+' full:'+full+' fillPercent:'+fillPercent);
           return (
             <div className="timer" onClick={this.props.onClick}>
               <p className="title">{this.props.name}</p>
-              <p>{this.props.min}:{this.state.seconds}</p>
-              <span className="fill" style={{height: '75%'}}></span>
+              <p>{formatTime}</p>
+              <span className="fill" style={{height: fillPercent+'%'}}></span>
             </div>
           );
         }
