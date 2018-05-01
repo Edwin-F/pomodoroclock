@@ -20,7 +20,8 @@
           this.handleSessionChange = this.handleSessionChange.bind(this);
           this.handleBreakChange = this.handleBreakChange.bind(this);
           this.handleClick = this.handleClick.bind(this);
-          this.state = {session: "25", break: "5", isSessionOn: true};
+          this.handleTime = this.handleTime.bind(this);
+          this.state = {session: "25", break: "5", isSessionOn: true, isTimerOn: false};
         }
 
         handleSessionChange(num) {
@@ -37,6 +38,12 @@
           }));
         }
 
+        handleTime() {
+          this.setState(prevState => ({
+            isTimerOn: !prevState.isTimerOn
+          }));
+        }
+
         render() {
           const currentSession = this.state.isSessionOn;
           const currentClockTitle = currentSession ? "Session": "Break!";
@@ -46,13 +53,14 @@
               <h1>Pomodoro Clock</h1>
               <header>
                   <div className="session">
-                    <Ctrl name="Break" num={this.state.break} onNumChange={this.handleBreakChange}/>
-                    <Ctrl name="Session" num={this.state.session} onNumChange={this.handleSessionChange}/>
+                    <Ctrl name="Break" num={this.state.break} onNumChange={this.handleBreakChange} timer={!this.state.isTimerOn}/>
+                    <Ctrl name="Session" num={this.state.session} onNumChange={this.handleSessionChange} timer={!this.state.isTimerOn}/>
                   </div>
               </header>
               <section>
                 <Timer name={currentClockTitle} min={currentMinute} onClick={this.handleClick} />
                 <h1>{this.state.isSessionOn ? 'ON': 'OFF'}</h1>
+                 <button onClick={this.handleTime}>{this.state.isTimerOn ? 'Stop': 'Start'}</button>
               </section>
             </div>
           );
@@ -65,8 +73,8 @@
         }
 
         render() {
-          const decrement = this.props.num > 0 ? (parseInt(this.props.num) - 1).toString(): this.props.num;
-          const increment = this.props.num < 30 ? (parseInt(this.props.num) + 1).toString(): this.props.num;
+          const decrement = (this.props.num > 0 && this.props.timer)? (parseInt(this.props.num) - 1).toString(): this.props.num;
+          const increment = (this.props.num < 30 && this.props.timer)? (parseInt(this.props.num) + 1).toString(): this.props.num;
           return (
             <div className="ctrl">
               <p>{this.props.name} Length</p>
