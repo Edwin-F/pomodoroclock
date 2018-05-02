@@ -22,7 +22,7 @@
           this.handleClick = this.handleClick.bind(this);
           this.handleTime = this.handleTime.bind(this);
           this.handleClockEnd = this.handleClockEnd.bind(this);
-          this.state = {session: "1", break: "5", isSessionOn: true, isTimerOn: false};
+          this.state = {session: "1", break: "1", isSessionOn: true, isTimerOn: false};
         }
 
         handleSessionChange(num) {
@@ -63,9 +63,10 @@
                   </div>
               </header>
               <section>
-                <Timer name={currentClockTitle} min={currentMinute} onClick={this.handleClick} onClockEnd={this.handleClockEnd}/>
-                <h1>{this.state.isSessionOn ? 'ON': 'OFF'}</h1>
-                 <button onClick={this.handleTime}>{this.state.isTimerOn ? 'Stop': 'Start'}</button>
+                <Timer name={currentClockTitle} min={currentMinute} timer={this.state.isTimerOn} onClick={this.handleClick} onClockEnd={this.handleClockEnd}/>
+                <div className="wrapper">
+                  <button className="button" onClick={this.handleTime}>{this.state.isTimerOn ? 'Pause': 'Start'}</button>
+                </div>
               </section>
             </div>
           );
@@ -94,14 +95,16 @@
       class Timer extends React.Component {
         constructor(props) {
           super(props);
-          this.state = {orig: 1, seconds: 30};
+          this.state = {orig: 1, seconds: 1};
         }
 
         componentDidMount() {
           const newSeconds = parseInt(this.props.min) * 60;
           const newMinutes = this.props.min;
           this.setState({orig: newMinutes, seconds: newSeconds });
-          this.startTimer();
+          if (this.props.timer) {
+            this.startTimer();
+          }
         }
 
         componentWillUnmount() {
@@ -111,9 +114,19 @@
         componentWillReceiveProps(nextProps){
           if (this.props.min != nextProps.min || this.props.name != nextProps.name) {
             this.setState({orig: nextProps.min, seconds: parseInt(nextProps.min) * 60});
-            console.log('old: '+this.state.orig + ' new: '+ nextProps.min);
-            this.stopTimer();
+            //console.log('old: '+this.state.orig + ' new: '+ nextProps.min);
+            //code below is for stop timer if maintain on, and switch sessions manually
+            if (typeof this.timerID != "undefined") {
+              console.log("id451");
+              this.stopTimer();
+            }
+          }
+          if (nextProps.timer) {
             this.startTimer();
+          }
+          if (!nextProps.timer) {
+            console.log("id111");
+            this.stopTimer();
           }
         }
 

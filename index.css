@@ -108,3 +108,17 @@ section .timer:after {
   border-radius: 50%;
   z-index: -1;
 }
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.wrapper .button {
+    position: absolute;
+    font-size: 30px;
+    background-color:  #333333;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+}
