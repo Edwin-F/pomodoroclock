@@ -75,7 +75,10 @@
 
       class Ctrl extends React.Component {
         handleChange = (param) => (e) => {
-          this.props.onNumChange(param);
+          //ensure no state change to num while timer is running
+          if (param != this.props.num) {
+            this.props.onNumChange(param);
+          } 
         }
 
         render() {
@@ -103,6 +106,7 @@
           const newMinutes = this.props.min;
           this.setState({orig: newMinutes, seconds: newSeconds });
           if (this.props.timer) {
+            console.log("333 didmount timer");
             this.startTimer();
           }
         }
@@ -122,22 +126,23 @@
             }
           }
           if (nextProps.timer) {
+            console.log("componentWillReceiveProps, nextprops, min:"+this.props.min);
             this.startTimer();
           }
           if (!nextProps.timer) {
-            console.log("id111");
+            console.log("componentWillReceiveProps, min:" + this.props.min);
             this.stopTimer();
           }
         }
 
         startTimer() {
+          console.log('this timer ID: ' + this.timerID + ' min: ' + this.props.min + ' session:' + this.props.name+' on?:' + this.props.timer);
           this.timerID = setInterval(() => this.tick(), 100);
-          console.log('this timer ID: ' + this.timerID);
         }
 
         stopTimer() {
           clearInterval(this.timerID);
-          console.log('stop timer: '+this.timerID);
+          console.log('stop timer: '+this.timerID + ' min: ' + this.props.min + ' session:' + this.props.name+' on?:' + this.props.timer);
         }
 
         tick() {
