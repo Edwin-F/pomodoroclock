@@ -19,7 +19,6 @@
           super(props);
           this.handleSessionChange = this.handleSessionChange.bind(this);
           this.handleBreakChange = this.handleBreakChange.bind(this);
-          this.handleClick = this.handleClick.bind(this);
           this.handleTime = this.handleTime.bind(this);
           this.handleClockEnd = this.handleClockEnd.bind(this);
           this.state = {session: "1", break: "1", isSessionOn: true, isTimerOn: false};
@@ -34,10 +33,6 @@
         }
 
         handleClockEnd() {
-          this.handleClick();
-        }
-
-        handleClick() {
           this.setState(prevState => ({
             isSessionOn: !prevState.isSessionOn
           }));
@@ -63,7 +58,7 @@
                   </div>
               </header>
               <section>
-                <Timer name={currentClockTitle} min={currentMinute} timer={this.state.isTimerOn} onClick={this.handleClick} onClockEnd={this.handleClockEnd}/>
+                <Timer name={currentClockTitle} min={currentMinute} timer={this.state.isTimerOn} onClockEnd={this.handleClockEnd}/>
                 <div className="wrapper">
                   <button className="button" onClick={this.handleTime}>{this.state.isTimerOn ? 'Pause': 'Start'}</button>
                 </div>
@@ -165,7 +160,7 @@
           const formatTime = date.toISOString().substr(14, 5);
           //console.log('piece:'+piece+' full:'+full+' fillPercent:'+fillPercent);
           return (
-            <div className="timer" onClick={this.props.onClick}>
+            <div className="timer">
               <p className="title">{this.props.name}</p>
               <p>{formatTime}</p>
               <span className="fill" style={{height: fillPercent+'%'}}></span>
