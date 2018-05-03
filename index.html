@@ -77,7 +77,7 @@
         }
 
         render() {
-          const decrement = (this.props.num > 0 && this.props.timer)? (parseInt(this.props.num) - 1).toString(): this.props.num;
+          const decrement = (this.props.num > 1 && this.props.timer)? (parseInt(this.props.num) - 1).toString(): this.props.num;
           const increment = (this.props.num < 30 && this.props.timer)? (parseInt(this.props.num) + 1).toString(): this.props.num;
           return (
             <div className="ctrl">
