@@ -21,7 +21,7 @@
           this.handleBreakChange = this.handleBreakChange.bind(this);
           this.handleTime = this.handleTime.bind(this);
           this.handleClockEnd = this.handleClockEnd.bind(this);
-          this.state = {session: "1", break: "1", isSessionOn: true, isTimerOn: false};
+          this.state = {session: "25", break: "5", isSessionOn: true, isTimerOn: false};
         }
 
         handleSessionChange(num) {
@@ -123,7 +123,7 @@
 
         startTimer() {
           //console.log('start timer ID: ' + this.timerID + ' min: ' + this.props.min + ' session:' + this.props.name+' on?:' + this.props.timer);
-          this.timerID = setInterval(() => this.tick(), 100);
+          this.timerID = setInterval(() => this.tick(), 1000);
         }
 
         stopTimer() {
