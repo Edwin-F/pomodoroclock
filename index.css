@@ -72,7 +72,7 @@ section .timer {
   width: 300px;
   height: 300px;
   font-size: 4em;
-  border: 2px solid #33cccc;
+  border: 2px solid #009999;
   border-radius: 50%;
   position: relative;
   z-index: 20;
@@ -89,7 +89,7 @@ section .title {
 section .fill {
   content: '';
   position: absolute;
-  background: #33cccc;
+  background: #009999;
   bottom: 0;
   right: 0;
   left: 0;

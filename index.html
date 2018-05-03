@@ -158,12 +158,17 @@
           const fillPercent = Math.floor((1-piece/full)*100);
           const date = new Date(piece*1000);
           const formatTime = date.toISOString().substr(14, 5);
+          const spanColor = this.props.name == 'Session'? '#009999':'#cc0000';
+          const spanStyle = {
+          height: fillPercent+'%',
+          backgroundColor: spanColor,
+          };
           //console.log('piece:'+piece+' full:'+full+' fillPercent:'+fillPercent);
           return (
             <div className="timer">
               <p className="title">{this.props.name}</p>
               <p>{formatTime}</p>
-              <span className="fill" style={{height: fillPercent+'%'}}></span>
+              <span className="fill" style={spanStyle}></span>
             </div>
           );
         }
