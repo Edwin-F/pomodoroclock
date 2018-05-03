@@ -100,10 +100,6 @@
           const newSeconds = parseInt(this.props.min) * 60;
           const newMinutes = this.props.min;
           this.setState({orig: newMinutes, seconds: newSeconds });
-          if (this.props.timer) {
-            console.log("333 didmount timer");
-            this.startTimer();
-          }
         }
 
         componentWillUnmount() {
@@ -114,30 +110,25 @@
           if (this.props.min != nextProps.min || this.props.name != nextProps.name) {
             this.setState({orig: nextProps.min, seconds: parseInt(nextProps.min) * 60});
             //console.log('old: '+this.state.orig + ' new: '+ nextProps.min);
-            //code below is for stop timer if maintain on, and switch sessions manually
-            if (typeof this.timerID != "undefined") {
-              console.log("id451");
-              this.stopTimer();
-            }
           }
           if (nextProps.timer) {
-            console.log("componentWillReceiveProps, nextprops, min:"+this.props.min);
+            //console.log("componentWillReceiveProps, min:"+this.props.min);
             this.startTimer();
           }
           if (!nextProps.timer) {
-            console.log("componentWillReceiveProps, min:" + this.props.min);
+            //console.log("componentWillReceiveProps, min:" + this.props.min);
             this.stopTimer();
           }
         }
 
         startTimer() {
-          console.log('this timer ID: ' + this.timerID + ' min: ' + this.props.min + ' session:' + this.props.name+' on?:' + this.props.timer);
+          //console.log('start timer ID: ' + this.timerID + ' min: ' + this.props.min + ' session:' + this.props.name+' on?:' + this.props.timer);
           this.timerID = setInterval(() => this.tick(), 100);
         }
 
         stopTimer() {
           clearInterval(this.timerID);
-          console.log('stop timer: '+this.timerID + ' min: ' + this.props.min + ' session:' + this.props.name+' on?:' + this.props.timer);
+          //console.log('stop timer: '+this.timerID + ' min: ' + this.props.min + ' session:' + this.props.name+' on?:' + this.props.timer);
         }
 
         tick() {
@@ -147,7 +138,7 @@
           }
           if (this.state.seconds <= 0) {
             this.stopTimer();
-            console.log('this state is: ' + this.state.seconds);
+            //console.log('this state is: ' + this.state.seconds);
             this.props.onClockEnd();
           }
         }
